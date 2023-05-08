@@ -63,7 +63,14 @@ namespace Ryujinx.SDL2.Common
                 SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
                 SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_SWITCH_HOME_LED, "0");
                 SDL_SetHint(SDL_HINT_JOYSTICK_HIDAPI_JOY_CONS, "1");
-                SDL_SetHint(SDL_HINT_VIDEO_ALLOW_SCREENSAVER, "1");
+
+                // Prevent SDL from managing system sleep in Windows.
+                // We control sleep manually in Ryujinx.Common.DisplaySleep for Windows.
+                // Since the current code doesn't yet handle other operation systems, let SDL disable sleep for them.
+                if (OperatingSystem.IsWindows())
+                {
+                    SDL_SetHint(SDL_HINT_VIDEO_ALLOW_SCREENSAVER, "1");
+                }
 
 
                 // NOTE: As of SDL2 2.24.0, joycons are combined by default but the motion source only come from one of them.
